@@ -24,11 +24,14 @@ public class Datasource {
                     + " VALUES(?,?) ";
     public static final String QUERY_BOOKS =
             "SELECT * FROM "+TABLE_BOOKS;
+    public static final String INSERT_BOOK =
+            "INSERT INTO "+ TABLE_BOOKS + " ("+COLUMN_BOOK_TITLE+") VALUES(?)";
 
 
     private Connection conn;
     private Statement createBookTable;
     private PreparedStatement insertInitialBookData;
+    private PreparedStatement insertBook;
 
     // Create an instance of the datasource to be accessed by other classes
     private static Datasource instance = new Datasource();
@@ -59,6 +62,9 @@ public class Datasource {
 //            insertInitialBookData.setString(2,"Things Fall Apart");
 //            insertInitialBookData.executeUpdate();
 
+            // Insert into books table
+            insertBook = conn.prepareStatement(INSERT_BOOK);
+
             return true;
 
         } catch (SQLException e) {
@@ -76,6 +82,9 @@ public class Datasource {
             }
             if (insertInitialBookData != null){
                 insertInitialBookData.close();
+            }
+            if (insertBook != null){
+                insertBook.close();
             }
 
         } catch (SQLException e) {
@@ -104,5 +113,18 @@ public class Datasource {
             return null;
         }
 
+    }
+
+    public boolean insertBook(String title){
+        try {
+            insertBook.setString(1,title);
+            int affectedRows = insertBook.executeUpdate();
+            System.out.println("Added Book: "+title);
+            return affectedRows == 1;
+
+        } catch (SQLException e) {
+            System.out.println("Error inserting book: "+e.getMessage());
+            return false;
+        }
     }
 }
