@@ -10,20 +10,32 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <AnchorPane id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="509.0" prefWidth="908.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.m6code.bookstoremanager.Controller">
     <children>
-        <JFXTreeTableView fx:id="treeTableView" layoutX="42.0" layoutY="24.0" prefHeight="509.0" prefWidth="440.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="315.0" AnchorPane.topAnchor="0.0">
+        <TableView fx:id="tableView" layoutX="42.0" layoutY="24.0" prefHeight="509.0" prefWidth="440.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="315.0" AnchorPane.topAnchor="0.0">
             <columns>
-                <TreeTableColumn fx:id="idCol" prefWidth="34.0" text="ID" />
-                <TreeTableColumn fx:id="titleCol" prefWidth="100.0" text="TITLE" />
+
+                <TableColumn prefWidth="34.0" text="ID" >
+                    <cellValueFactory>
+                        <PropertyValueFactory property="_id"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="100.0" text="TITLE">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="title"/>
+                    </cellValueFactory>
+                </TableColumn>
                 <!--<TreeTableColumn fx:id="authorCol" prefWidth="60.0" text="AUTHOR" />-->
                 <!--<TreeTableColumn fx:id="yearCol" prefWidth="20.0" text="YEAR" />-->
                 <!--<TreeTableColumn fx:id="genreCol" prefWidth="75.0" text="GENRE" />-->
             </columns>
          <columnResizePolicy>
-            <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
-        </JFXTreeTableView>
+        </TableView>
         <VBox layoutX="440.0" layoutY="6.0" prefHeight="509.0" prefWidth="311.0" style="-fx-spacing: 12PX;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <HBox prefHeight="55.0" prefWidth="311.0" style="-fx-spacing: 4px;">
