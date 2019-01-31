@@ -27,11 +27,15 @@ public class Datasource {
     public static final String INSERT_BOOK =
             "INSERT INTO "+ TABLE_BOOKS + " ("+COLUMN_BOOK_TITLE+") VALUES(?)";
 
+    public static final String DELETE_SELECTED_BOOK_BY_ID =
+            "DELETE FROM "+TABLE_BOOKS+" WHERE "+COLUMN_BOOK_ID+"=?";
+
 
     private Connection conn;
     private Statement createBookTable;
     private PreparedStatement insertInitialBookData;
     private PreparedStatement insertBook;
+    private PreparedStatement deleteBook;
 
     // Create an instance of the datasource to be accessed by other classes
     private static Datasource instance = new Datasource();
@@ -62,8 +66,10 @@ public class Datasource {
 //            insertInitialBookData.setString(2,"Things Fall Apart");
 //            insertInitialBookData.executeUpdate();
 
-            // Insert into books table
+            // Prepare Insert into books preparedStatement
             insertBook = conn.prepareStatement(INSERT_BOOK);
+            // Prepare Delete book preparedStatement
+            deleteBook = conn.prepareStatement(DELETE_SELECTED_BOOK_BY_ID);
 
             return true;
 
@@ -85,6 +91,9 @@ public class Datasource {
             }
             if (insertBook != null){
                 insertBook.close();
+            }
+            if (deleteBook!=null){
+                deleteBook.close();
             }
 
         } catch (SQLException e) {
@@ -114,16 +123,28 @@ public class Datasource {
 
     }
 
-    public boolean insertBook(String title){
+    public void insertBook(String title){
         try {
             insertBook.setString(1,title);
             int affectedRows = insertBook.executeUpdate();
-            System.out.println("Added Book: "+title);
-            return affectedRows == 1;
+            if (affectedRows == 1){
+                System.out.println("Added Book: "+title);
+            }
 
         } catch (SQLException e) {
             System.out.println("Error inserting book: "+e.getMessage());
-            return false;
+        }
+    }
+
+    public void deleteBook(String id){
+        try{
+            deleteBook.setString(1,id);
+            int affectedRows = deleteBook.executeUpdate(); // delete the book
+            if (affectedRows == 1){
+                System.out.println("Deleted book with id "+id);
+            }
+        }catch (SQLException e){
+            System.out.println("Delete failed: "+e.getMessage());
         }
     }
 }

@@ -58,8 +58,7 @@ public class Controller implements Initializable {
         String title = titleTF.getText();
         // Check if the text field if empty or only contains white spaces
         if (titleTF.getText().trim().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.NONE, "Please provide a title in the textfield", ButtonType.OK);
-            alert.show();
+            alertUser("Please provide a title in the textfield");
         } else {
             // Insert book into the database;
             Datasource.getInstance().insertBook(title);
@@ -78,6 +77,15 @@ public class Controller implements Initializable {
 
     @FXML
     public void deleteButtonClick(ActionEvent event) {
+        try {
+            int selectedIndex = treeTableView.getSelectionModel().getSelectedIndex();
+            String id = treeTableView.getTreeItem(selectedIndex).getValue().get_id();
+            Datasource.getInstance().deleteBook(id); // Delete selected book
+            reloadUI(); // reload changes to UI
+        } catch (NullPointerException e) {
+            System.out.println("Error: "+e.getMessage());
+            alertUser("Please select an entry first");
+        }
     }
 
     @FXML
@@ -89,6 +97,12 @@ public class Controller implements Initializable {
         data.clear();
         // reLoad data
         updateTableTableView();
+    }
+
+    /* Display an alert message to the UI */
+    private void alertUser(String msg) {
+        Alert alert = new Alert(Alert.AlertType.NONE, msg, ButtonType.OK);
+        alert.show();
     }
 }
 
