@@ -68,6 +68,16 @@ public class Controller implements Initializable {
 
     @FXML
     public void editButtonClick(ActionEvent event) {
+        try {
+            int selectedIndex = treeTableView.getSelectionModel().getSelectedIndex();
+            String title = treeTableView.getTreeItem(selectedIndex).getValue().getTitle();
+            updateBT.setVisible(true); // show the update button
+            titleTF.setText(title);
+
+        }catch (NullPointerException e){
+            System.out.println("Error: "+ e.getMessage());
+            alertUser("Please select and entry first");
+        }
     }
 
     @FXML
@@ -90,6 +100,7 @@ public class Controller implements Initializable {
 
     @FXML
     public void updateButton(ActionEvent event) {
+
     }
 
     /* Reload the data in the TreeTableView*/
