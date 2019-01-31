@@ -100,7 +100,17 @@ public class Controller implements Initializable {
 
     @FXML
     public void updateButton(ActionEvent event) {
-
+       try{
+           int selectedIndex = treeTableView.getSelectionModel().getSelectedIndex();
+           String id = treeTableView.getTreeItem(selectedIndex).getValue().get_id(); // get id of the current index
+           String title = titleTF.getText(); // get book title from text field
+           Datasource.getInstance().updateBook(id, title); // update book
+           reloadUI(); // update the UI
+           clearTextField(); // clear the text field
+           updateBT.setVisible(false); // hide the update button
+       }catch (NullPointerException e){
+           e.getMessage();
+       }
     }
 
     /* Reload the data in the TreeTableView*/
