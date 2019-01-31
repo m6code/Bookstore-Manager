@@ -58,12 +58,11 @@ public class Controller implements Initializable {
         String title = titleTF.getText();
         // Check if the text field if empty or only contains white spaces
         if (titleTF.getText().trim().isEmpty()) {
-            alertUser("Please provide a title in the textfield");
+            alertUser("Please provide a title in the Text Field");
         } else {
-            // Insert book into the database;
-            Datasource.getInstance().insertBook(title);
-            // reload UI
-            reloadUI();
+            Datasource.getInstance().insertBook(title); // Insert book into the database
+            reloadUI(); // reload UI
+            clearTextField(); // Clear textField
         }
     }
 
@@ -73,6 +72,7 @@ public class Controller implements Initializable {
 
     @FXML
     public void clearButtonClick(ActionEvent event) {
+        clearTextField();
     }
 
     @FXML
@@ -92,6 +92,7 @@ public class Controller implements Initializable {
     public void updateButton(ActionEvent event) {
     }
 
+    /* Reload the data in the TreeTableView*/
     private void reloadUI() {
         // Clear existing data
         data.clear();
@@ -103,6 +104,11 @@ public class Controller implements Initializable {
     private void alertUser(String msg) {
         Alert alert = new Alert(Alert.AlertType.NONE, msg, ButtonType.OK);
         alert.show();
+    }
+
+    /* Clear the Text Field */
+    private void clearTextField() {
+        titleTF.clear();
     }
 }
 

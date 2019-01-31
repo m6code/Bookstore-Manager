@@ -130,7 +130,6 @@ public class Datasource {
             if (affectedRows == 1){
                 System.out.println("Added Book: "+title);
             }
-
         } catch (SQLException e) {
             System.out.println("Error inserting book: "+e.getMessage());
         }
