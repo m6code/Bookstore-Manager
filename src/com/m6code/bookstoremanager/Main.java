@@ -23,9 +23,6 @@ public class Main extends Application {
         AnchorPane root = loader.load();
         Scene scene = new Scene(root);
 
-        Controller controller = loader.getController();
-        controller.loadBooks();
-
         primaryStage.setScene(scene);
         primaryStage.setTitle("Bookstore Manager");
         primaryStage.show();

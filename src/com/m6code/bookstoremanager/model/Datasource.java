@@ -100,10 +100,9 @@ public class Datasource {
 
             List<Book> books = new ArrayList<>();
             while (results.next()){
-                Book book = new Book();
-                book.set_id(results.getInt(INDEX_BOOK_ID));
-                book.setTitle(results.getString(INDEX_BOOK_TITLE));
-                books.add(book);
+                books.add(new Book(
+                        results.getString(INDEX_BOOK_ID),
+                        results.getString(INDEX_BOOK_TITLE)));
             }
             return books;
 

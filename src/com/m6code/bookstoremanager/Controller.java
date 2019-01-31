@@ -1,68 +1,81 @@
 package com.m6code.bookstoremanager;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.m6code.bookstoremanager.model.Book;
 import com.m6code.bookstoremanager.model.Datasource;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableView;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
 
-public class Controller {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class Controller implements Initializable {
 
     @FXML
-    private TableView tableView;
+    private JFXTreeTableView<Book> treeTableView;
+
+    @FXML
+    private TreeTableColumn<Book, String> idCol;
+
+    @FXML
+    private TreeTableColumn<Book, String> titleCol;
 
     @FXML
     private TextField titleTF;
 
-    public void  loadBooks(){
-        Task<ObservableList<Book>> task = new GetAllBooksTask();
-        tableView.itemsProperty().bind(task.valueProperty());
-
-        new Thread(task).start();
-    }
-
     @FXML
-    public void addButton(){
-        String title = titleTF.getText();
+    private JFXButton updateBT;
 
-        if(title.equals("")){
-            titleTF.setPromptText("Please Enter A Title");
-            System.out.println("Error. Enter a valid Test");
+    private ObservableList<Book> data = null;
 
-        }else{
-            Task<Boolean> addBookTask = new Task<Boolean>() {
-                @Override
-                protected Boolean call() throws Exception {
-                    return Datasource.getInstance().insertBook(title);
-                }
-            };
-            addBookTask.setOnSucceeded(e -> {
-                // TODO: Update UI with added data
-                    tableView.refresh();
-                    //clearFields();
-            });
-
-            new Thread(addBookTask).start();
-
-        }
-    }
-
-    @FXML
-    public void updateBook(){
-
-    }
-
-
-}
-
-class GetAllBooksTask extends Task{
     @Override
-    protected ObservableList<Book> call(){
-        return FXCollections.observableArrayList
-                (Datasource.getInstance().queryBooks());
+    public void initialize(URL location, ResourceBundle resources) {
+        idCol.setCellValueFactory(param -> param.getValue().getValue()._idProperty());
+        titleCol.setCellValueFactory(param -> param.getValue().getValue().titleProperty());
+
+        updateTableTableView();
+
+    }
+
+    private void updateTableTableView() {
+        data = FXCollections.observableArrayList(Datasource.getInstance().queryBooks());
+        TreeItem<Book> root = new RecursiveTreeItem<>(data, RecursiveTreeObject::getChildren);
+        treeTableView.setRoot(root);
+        treeTableView.setShowRoot(false);
+    }
+
+    @FXML
+    public void addButtonClick(ActionEvent event) {
+    }
+
+    @FXML
+    public void editButtonClick(ActionEvent event) {
+    }
+
+    @FXML
+    public void clearButtonClick(ActionEvent event) {
+    }
+
+    @FXML
+    public void deleteButtonClick(ActionEvent event) {
+    }
+
+    @FXML
+    public void updateButton(ActionEvent event) {
+    }
+
+    private void reloadUI(){
+        data.clear();
+        updateTableTableView();
     }
 }
+
