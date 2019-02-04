@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Datasource {
     public static final String DB_NAME = "bookstore.db";
-    public static final String CONN_STRING = "jdbc:sqlite:./src/resources/db/" + DB_NAME;
+    public static final String CONN_STRING = "jdbc:sqlite:"+ DB_NAME;
 
     public static final String TABLE_BOOKS = "books";
     public static final String COLUMN_BOOK_ID = "_id";
