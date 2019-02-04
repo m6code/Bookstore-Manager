@@ -14,6 +14,12 @@ public class Datasource {
     public static final int INDEX_BOOK_ID = 1;
     public static final int INDEX_BOOK_TITLE = 2;
 
+    public static final String TABLE_SQL_SEQUENCE = "sqlite_sequence";
+    public static final String COLUMN_SSQ_NAME = "name";
+    public static final String COLUMN_SSQ_SEQ = "seq";
+    public static final int INDEX_SSQ_NAME = 1;
+    public static final int INDEX_SSQ_SEQ = 2;
+
     public static final String CREATE_BOOK_TABLE_IF_NOT_EXISTS =
             "CREATE TABLE IF NOT EXISTS " + TABLE_BOOKS
                     + " (" + COLUMN_BOOK_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
@@ -32,11 +38,14 @@ public class Datasource {
 
     public static final String UPDATE_SELECTED_BOOK =
             "UPDATE " + TABLE_BOOKS + " SET " + COLUMN_BOOK_TITLE + "=? " +"WHERE "+COLUMN_BOOK_ID+"=?";
+    public static final String QUERY_SEQUENCE_TABLE = "SELECT * FROM "+TABLE_SQL_SEQUENCE;
+    public static final String INSERT_SEQUENCE = "INSERT INTO "+ TABLE_SQL_SEQUENCE
+            + " ("+COLUMN_SSQ_NAME+", "+COLUMN_SSQ_SEQ+") VALUES(?,?)";
 
 
     private Connection conn;
     private Statement createBookTable;
-    private PreparedStatement insertInitialBookData;
+    private PreparedStatement insertInitialSequenceData;
     private PreparedStatement insertBook;
     private PreparedStatement deleteBook;
     private PreparedStatement updateBook;
@@ -62,13 +71,11 @@ public class Datasource {
             createBookTable = conn.createStatement();
             createBookTable.execute(CREATE_BOOK_TABLE_IF_NOT_EXISTS);
 
-            // Todo: Query books table initial book data exits
-            // before adding or skipping it
-            // Insert initial data into books table
-//            insertInitialBookData = conn.prepareStatement(INSERT_INITIAL_BOOK_DATA);
-//            insertInitialBookData.setInt(1,110);
-//            insertInitialBookData.setString(2,"Things Fall Apart");
-//            insertInitialBookData.executeUpdate();
+            // Prepare Insert into squence table statement
+            insertInitialSequenceData = conn.prepareStatement(INSERT_SEQUENCE);
+
+            //Query sqlite_sequence table and set book sequence if not exists
+            createBookSequence();
 
             // Prepare Insert into books preparedStatement
             insertBook = conn.prepareStatement(INSERT_BOOK);
@@ -92,8 +99,8 @@ public class Datasource {
             if (createBookTable != null) {
                 createBookTable.close();
             }
-            if (insertInitialBookData != null) {
-                insertInitialBookData.close();
+            if (insertInitialSequenceData != null) {
+                insertInitialSequenceData.close();
             }
             if (insertBook != null) {
                 insertBook.close();
@@ -163,6 +170,22 @@ public class Datasource {
             updateBook.executeUpdate();
         }catch (SQLException e){
             System.out.println("Cannot update: "+e.getMessage());
+        }
+    }
+
+    private void createBookSequence(){
+        try(Statement statement = conn.createStatement();
+            ResultSet results = statement.executeQuery(QUERY_SEQUENCE_TABLE)) {
+            if (!results.next()){
+                insertInitialSequenceData.setString(1,TABLE_BOOKS);
+                insertInitialSequenceData.setString(2,"109");
+                insertInitialSequenceData.executeUpdate();
+            }else {
+                System.out.println("books table sequence already created");
+            }
+
+        }catch (SQLException e){
+            e.getStackTrace();
         }
     }
 }
