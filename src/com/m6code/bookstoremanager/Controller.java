@@ -92,6 +92,7 @@ public class Controller implements Initializable {
             String id = treeTableView.getTreeItem(selectedIndex).getValue().get_id();
             Datasource.getInstance().deleteBook(id); // Delete selected book
             reloadUI(); // reload changes to UI
+            clearTextField();
         } catch (NullPointerException e) {
             System.out.println("Error: "+e.getMessage());
             alertUser("Please select an entry first");
@@ -130,6 +131,7 @@ public class Controller implements Initializable {
     /* Clear the Text Field */
     private void clearTextField() {
         titleTF.clear();
+        updateBT.setVisible(false);
     }
 }
 

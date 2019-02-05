@@ -111,6 +111,9 @@ public class Datasource {
             if (updateBook != null){
                 deleteBook.close();
             }
+            if (conn != null){
+                conn.close();
+            }
 
         } catch (SQLException e) {
             System.out.println("Error closing connection <- " + e.getMessage());
